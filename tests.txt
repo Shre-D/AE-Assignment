@@ -1,0 +1,95 @@
+Stationarity Tests
+==================
+
+ADF Test for Currency in Circulation
+------------------------
+The Augmented Dickey-Fuller test checks for stationarity.
+Null Hypothesis: The series has a unit root (non-stationary).
+Alternative Hypothesis: The series is stationary.
+
+Test Statistic: -0.3670
+p-value: 0.9155
+Interpretation: p-value > 0.05: Fail to reject null hypothesis - series is non-stationary
+
+Critical Values:
+1%: -3.4875
+5%: -2.8866
+10%: -2.5801
+
+Comparison: If test statistic < critical value, reject null hypothesis.
+
+ADF Test for Repo Rate
+------------------------
+The Augmented Dickey-Fuller test checks for stationarity.
+Null Hypothesis: The series has a unit root (non-stationary).
+Alternative Hypothesis: The series is stationary.
+
+Test Statistic: -1.8710
+p-value: 0.3458
+Interpretation: p-value > 0.05: Fail to reject null hypothesis - series is non-stationary
+
+Critical Values:
+1%: -3.4880
+5%: -2.8868
+10%: -2.5802
+
+Comparison: If test statistic < critical value, reject null hypothesis.
+
+ADF Test for CPI Inflation Rate
+------------------------
+The Augmented Dickey-Fuller test checks for stationarity.
+Null Hypothesis: The series has a unit root (non-stationary).
+Alternative Hypothesis: The series is stationary.
+
+Test Statistic: -1.4208
+p-value: 0.5723
+Interpretation: p-value > 0.05: Fail to reject null hypothesis - series is non-stationary
+
+Critical Values:
+1%: -3.4930
+5%: -2.8890
+10%: -2.5814
+
+Comparison: If test statistic < critical value, reject null hypothesis.
+
+ADF Test for Currency in Circulation
+------------------------
+The Augmented Dickey-Fuller test checks for stationarity.
+Null Hypothesis: The series has a unit root (non-stationary).
+Alternative Hypothesis: The series is stationary.
+
+Test Statistic: -0.3670
+p-value: 0.9155
+Interpretation: p-value > 0.05: Fail to reject null hypothesis - series is non-stationary
+
+Critical Values:
+1%: -3.4875
+5%: -2.8866
+10%: -2.5801
+
+Comparison: If test statistic < critical value, reject null hypothesis.
+
+
+Note: Currency in Circulation was non-stationary, so first differences were used.
+Model Diagnostics
+==================
+These tests check if the model residuals are well-behaved (white noise).
+
+1. Ljung-Box Test for Autocorrelation:
+Null Hypothesis: No autocorrelation in residuals.
+Test Statistic: 13.7568
+p-value: 0.1844
+Interpretation: No significant autocorrelation (good)
+
+2. Jarque-Bera Test for Normality:
+Null Hypothesis: Residuals are normally distributed.
+Test Statistic: 18401.3378
+p-value: 0.0000
+Interpretation: Residuals not normally distributed (problematic)
+
+3. ARCH Test for Heteroskedasticity:
+Null Hypothesis: No ARCH effects (constant variance).
+Test Statistic: 0.1521
+p-value: 1.0000
+Interpretation: No ARCH effects (good)
+

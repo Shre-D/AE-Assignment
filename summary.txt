@@ -1,47 +1,29 @@
 Summary Statistics
 ==================
 
+This section provides descriptive statistics for each variable in our model.
+The statistics include count, mean, standard deviation, min, 25th percentile,
+median (50th percentile), 75th percentile, and max values.
+
 Currency in Circulation:
-count    1.200000e+02
-mean     2.205321e+07
-std      7.338681e+06
-min      9.432091e+06
-25%      1.544175e+07
-50%      2.047514e+07
-75%      2.944208e+07
-max      3.478479e+07
-Name: Currency in Circulation, dtype: float64
+                         count          mean           std          min           25%           50%           75%          max
+Currency in Circulation  120.0  2.205321e+07  7.338681e+06  9432090.857  1.544175e+07  2.047514e+07  2.944208e+07  34784790.86
 
 Repo Rate:
-count    120.000000
-mean       5.961250
-std        1.242299
-min        4.000000
-25%        5.150000
-50%        6.250000
-75%        6.500000
-max        8.000000
-Name: Repo Rate, dtype: float64
+           count     mean       std  min   25%   50%  75%  max
+Repo Rate  120.0  5.96125  1.242299  4.0  5.15  6.25  6.5  8.0
 
 CPI Inflation Rate (in %):
-count    120.000000
-mean       5.247716
-std        1.633844
-min        1.460415
-25%        4.144970
-50%        5.234332
-75%        6.604508
-max        8.604207
-Name: CPI Inflation Rate (in %), dtype: float64
+                           count      mean       std       min      25%       50%       75%       max
+CPI Inflation Rate (in %)  120.0  5.247716  1.633844  1.460415  4.14497  5.234332  6.604508  8.604207
 
 Correlation Matrix:
-                           Currency in Circulation  Repo Rate  \
-Currency in Circulation                   1.000000  -0.625245   
-Repo Rate                                -0.625245   1.000000   
-CPI Inflation Rate (in %)                 0.363794  -0.075146   
+The correlation matrix shows the pairwise correlation between variables.
+Values range from -1 (perfect negative correlation) to +1 (perfect positive correlation).
+Values close to 0 indicate little to no linear relationship.
 
-                           CPI Inflation Rate (in %)  
-Currency in Circulation                     0.363794  
-Repo Rate                                  -0.075146  
-CPI Inflation Rate (in %)                   1.000000  
+                           Currency in Circulation  Repo Rate  CPI Inflation Rate (in %)
+Currency in Circulation                   1.000000  -0.625245                   0.363794
+Repo Rate                                -0.625245   1.000000                  -0.075146
+CPI Inflation Rate (in %)                 0.363794  -0.075146                   1.000000
 

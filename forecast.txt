@@ -1,0 +1,22 @@
+
+
+Forecast for next 5 periods
+=================================
+
+Out-of-sample forecasts with 95% confidence intervals:
+
+Currency in Circulation          mean       mean_se  mean_ci_lower  mean_ci_upper
+120                      3.460275e+07  6.715799e+05   3.328647e+07   3.591902e+07
+121                      3.456496e+07  1.184377e+06   3.224363e+07   3.688630e+07
+122                      3.453163e+07  1.580116e+06   3.143466e+07   3.762860e+07
+123                      3.451942e+07  1.865667e+06   3.086278e+07   3.817606e+07
+124                      3.452643e+07  2.075535e+06   3.045846e+07   3.859441e+07
+
+Extrapolated future exogenous variables used for forecasting:
+
+ const  Repo Rate  CPI Inflation Rate (in %)
+   1.0   4.509128                   5.852391
+   1.0   4.485126                   5.862385
+   1.0   4.461124                   5.872380
+   1.0   4.437122                   5.882375
+   1.0   4.413120                   5.892369
