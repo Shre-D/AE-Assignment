@@ -13,22 +13,29 @@ import warnings
 
 warnings.simplefilter('ignore', ConvergenceWarning)
 
-# Create folder for graphs if not exists
+# Create folder for graphs if it doesn't exist
 os.makedirs('graphs', exist_ok=True)
 
 def load_prepare_data(file_path):
-    # Load Domestic Currency sheet
+    # Load Domestic Currency sheet with multi-index headers, skip first 5 rows
     df = pd.read_excel(file_path, sheet_name='Domestic Currency', skiprows=5, header=[0,1])
+    
+    # Select only columns where second level header is 'India'
     india_cols = [col for col in df.columns if col[1] == 'India']
     df_india = df[india_cols].copy()
+    
+    # Add 'Items' column to index to reshape the data
     df_india['Items'] = df['Items']
+    
+    # Transpose so that months become rows and Items become columns
     df_india = df_india.set_index('Items').T.reset_index()
     df_india = df_india.rename(columns={'level_0': 'Month', 'level_1': 'Country'})
 
+    # Extract relevant columns for currency data and skip first 16 rows (usually header/metadata)
     df_final = df_india[['Month', 'Country', 'Currency in Circulation']]
-    df_final = df_final.iloc[16:].reset_index(drop=True)  # Consider parameterizing or commenting this slice
+    df_final = df_final.iloc[16:].reset_index(drop=True)
 
-    # Load Rates & Ratio sheet
+    # Load Rates & Ratio sheet similarly
     df_rates = pd.read_excel(file_path, sheet_name='Rates & ratio', skiprows=5, header=[0,1])
     india_cols_rate = [col for col in df_rates.columns if col[1] == 'India']
     df_india_rates = df_rates[india_cols_rate].copy()
@@ -36,10 +43,10 @@ def load_prepare_data(file_path):
     df_india_rates = df_india_rates.set_index('Items').T.reset_index()
     df_india_rates = df_india_rates.rename(columns={'level_0': 'Month', 'level_1': 'Country'})
 
-    # Fix column names by stripping whitespace
+    # Strip whitespace in column names to avoid key errors
     df_india_rates.columns = [col.strip() if isinstance(col, str) else col for col in df_india_rates.columns]
 
-    # Check required columns
+    # Verify required columns exist
     needed_cols = ['Month', 'Country', 'Repo Rate', 'CPI Inflation Rate (in %)']
     missing_cols = [c for c in needed_cols if c not in df_india_rates.columns]
     if missing_cols:
@@ -48,32 +55,33 @@ def load_prepare_data(file_path):
     df_final_rates = df_india_rates[needed_cols]
     df_final_rates = df_final_rates.iloc[16:].reset_index(drop=True)
 
-    # Merge on Month and Country
+    # Merge currency and rate data on Month and Country
     df_merged = pd.merge(df_final, df_final_rates, on=['Month', 'Country'], how='left')
 
-    # Drop last 156 rows if needed, otherwise comment or parameterize
+    # Drop last 156 rows if dataset is large, else comment out or parameterize
     if len(df_merged) > 156:
         df_merged = df_merged.iloc[:-156]
 
-    # Convert columns to numeric, coercing errors to NaN
+    # Convert columns to numeric, coercing non-numeric entries to NaN (e.g. '--')
     for col in ['Currency in Circulation', 'Repo Rate', 'CPI Inflation Rate (in %)']:
         df_merged[col] = pd.to_numeric(df_merged[col], errors='coerce')
 
+    # Replace infinite values with NaN as a safety measure
     df_merged.replace([np.inf, -np.inf], np.nan, inplace=True)
 
-    # Interpolate numeric columns linearly, good for time series continuity
+    # Linearly interpolate missing values to maintain time series continuity
     df_merged[['Currency in Circulation', 'Repo Rate', 'CPI Inflation Rate (in %)']] = \
         df_merged[['Currency in Circulation', 'Repo Rate', 'CPI Inflation Rate (in %)']].interpolate(method='linear')
 
-    # Fill remaining NaNs (start/end)
+    # Forward and backward fill remaining NaNs (usually at edges)
     df_merged.fillna(method='bfill', inplace=True)
     df_merged.fillna(method='ffill', inplace=True)
 
-    # Convert Month to datetime
+    # Convert Month to datetime for time series operations
     df_merged['Month'] = pd.to_datetime(df_merged['Month'])
     df_merged = df_merged.sort_values('Month').reset_index(drop=True)
 
-    # Sanity check
+    # Warning if NaNs remain in key series after filling
     if df_merged[['Repo Rate', 'CPI Inflation Rate (in %)']].isnull().any().any():
         print("Warning: NaNs remain in Repo Rate or CPI Inflation Rate after filling!")
 
@@ -91,13 +99,14 @@ def save_summary_stats(df, filename='summary.txt'):
         f.write('\n\nCPI Inflation Rate (in %):\n')
         f.write(str(df['CPI Inflation Rate (in %)'].describe()))
         f.write('\n\nCorrelation Matrix:\n')
+        
         corr = df[['Currency in Circulation', 'Repo Rate', 'CPI Inflation Rate (in %)']].corr()
         f.write(str(corr))
         f.write('\n\n')
 
 
 def plot_time_series(df):
-    # Plot Currency in Circulation (scale ~1e7)
+    # Plot Currency in Circulation separately due to large scale (~1e7)
     plt.figure(figsize=(12,6))
     plt.plot(df['Month'], df['Currency in Circulation'], label='Currency in Circulation', color='tab:blue')
     plt.title('Currency in Circulation Over Time')
@@ -108,7 +117,7 @@ def plot_time_series(df):
     plt.savefig('graphs/currency_in_circulation.png')
     plt.close()
 
-    # Plot Repo Rate and CPI Inflation Rate (smaller scale)
+    # Plot Repo Rate and CPI Inflation Rate together, similar scale
     plt.figure(figsize=(12,6))
     plt.plot(df['Month'], df['Repo Rate'], label='Repo Rate', color='tab:orange')
     plt.plot(df['Month'], df['CPI Inflation Rate (in %)'], label='CPI Inflation Rate (%)', color='tab:green')
@@ -160,6 +169,7 @@ def fit_arimax_model(df):
     endog = df['Currency in Circulation']
     exog = df[['Repo Rate', 'CPI Inflation Rate (in %)']]
 
+    # Fill NaNs in exogenous variables for the model
     exog = exog.fillna(method='bfill').fillna(method='ffill')
 
     model = SARIMAX(endog,
