@@ -1,0 +1,47 @@
+Summary Statistics
+==================
+
+Currency in Circulation:
+count    1.200000e+02
+mean     2.205321e+07
+std      7.338681e+06
+min      9.432091e+06
+25%      1.544175e+07
+50%      2.047514e+07
+75%      2.944208e+07
+max      3.478479e+07
+Name: Currency in Circulation, dtype: float64
+
+Repo Rate:
+count    120.000000
+mean       5.961250
+std        1.242299
+min        4.000000
+25%        5.150000
+50%        6.250000
+75%        6.500000
+max        8.000000
+Name: Repo Rate, dtype: float64
+
+CPI Inflation Rate (in %):
+count    120.000000
+mean       5.247716
+std        1.633844
+min        1.460415
+25%        4.144970
+50%        5.234332
+75%        6.604508
+max        8.604207
+Name: CPI Inflation Rate (in %), dtype: float64
+
+Correlation Matrix:
+                           Currency in Circulation  Repo Rate  \
+Currency in Circulation                   1.000000  -0.625245   
+Repo Rate                                -0.625245   1.000000   
+CPI Inflation Rate (in %)                 0.363794  -0.075146   
+
+                           CPI Inflation Rate (in %)  
+Currency in Circulation                     0.363794  
+Repo Rate                                  -0.075146  
+CPI Inflation Rate (in %)                   1.000000  
+
